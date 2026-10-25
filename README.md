@@ -20,7 +20,7 @@ A study system that runs inside Claude. It turns lecture slides into revision no
 ### Option B — Claude Code
 
 ```bash
-claude plugin marketplace add <github-user>/study-engine
+claude plugin marketplace add tayyipcanbay/study-engine
 claude plugin install study-engine@study-engine
 claude mcp add --transport http notion https://mcp.notion.com/mcp
 ```
