@@ -1,0 +1,14 @@
+{
+  "name": "study-engine",
+  "description": "A personal study system for university students: lecture notes, hint-first tutoring, mock exams and spaced repetition, tracked in Notion.",
+  "owner": {
+    "name": "Canbay"
+  },
+  "plugins": [
+    {
+      "name": "study-engine",
+      "source": "./plugins/study-engine",
+      "description": "Setup interview plus the study engine (notes, tutor, mock exams, spaced repetition)."
+    }
+  ]
+}
