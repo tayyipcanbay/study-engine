@@ -11,7 +11,7 @@ A study system that runs inside Claude. It turns lecture slides into revision no
 
 ## Install
 
-### Option A — claude.ai (web, desktop, mobile)
+### Option A — claude.ai (web or desktop app)
 
 1. Turn on **code execution** in Settings → Capabilities.
 2. Download `dist/study-setup.zip` and `dist/study.zip` from this repo.
@@ -25,7 +25,7 @@ claude plugin install study-engine@study-engine
 claude mcp add --transport http notion https://mcp.notion.com/mcp
 ```
 
-Then run `/mcp` inside Claude Code and sign in to Notion. Updates: `claude plugin marketplace update study-engine`.
+Then run `/mcp` inside Claude Code and sign in to Notion. Drive and Calendar are optional here too; without them you upload files and planning uses your lecture times. Updates: `claude plugin marketplace update study-engine`.
 
 ## First run
 

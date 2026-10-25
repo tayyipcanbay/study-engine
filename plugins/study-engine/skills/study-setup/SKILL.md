@@ -125,7 +125,7 @@ Course details (exam type, dates, lecture times, priority, AI policy) live in th
 ## 4. Smoke test and hand-off
 
 1. Query each of the four databases once. If any query fails, fix it before finishing.
-2. Tell them in 3 lines: where the Study Hub is (link), what's set up, and what to try first. Suggested first prompts:
+2. Tell them briefly: where the Study Hub is (link), what's set up, and what to try first. Suggested first prompts:
    - "Make notes for <course> lecture 1"
    - "What should I study now?"
    - "Quiz me on <topic>"

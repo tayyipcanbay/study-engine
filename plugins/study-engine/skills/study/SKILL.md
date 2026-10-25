@@ -118,7 +118,7 @@ They can say "move Tuesday's block" or "less on Friday" and you re-plan. Still s
 No lectures to pace them, so the system does:
 
 1. **First two weeks:** collect the full script/slides, sheets and past exams; build the complete Topics list for the course (mastery 0) so progress is visible from day one.
-2. **Default pace:** about one chapter per week between `lectures_start` and the break. Use the break as buffer and for first mock exams. The last weeks before the exam: mock exams and weak points only.
+2. **Default pace:** about one chapter per week between `lectures_start` and the break (or `lectures_end` if there's no break; if the dates are `unknown`, ask once and save them). Use the break as buffer and for first mock exams. The last weeks before the exam: mock exams and weak points only.
 3. If a self-study course stays at average mastery < 1.5 by mid-term, say so honestly and ask whether to change the plan (more time, a different course, or dropping the exam if the rules allow).
 
 ## Logging
