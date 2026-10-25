@@ -7,6 +7,7 @@ A study system that runs inside Claude. It turns lecture slides into revision no
 1. A Claude **Pro, Max, Team or Enterprise** plan (skills aren't on Free).
 2. **Notion** connected in Claude (Settings → Connectors). Required.
 3. **Google Drive** connected. Optional: lets Claude read your slides directly. Without it, you upload PDFs into the chat.
+4. **Google Calendar** connected. Optional and read-only: Claude reads your schedule to suggest study blocks in free slots. It never adds or changes events.
 
 ## Install
 
@@ -39,7 +40,9 @@ Claude asks about you, your courses, exam formats and how you like explanations 
 2. `Help with sheet 2 exercise 3` — it asks for your idea first and gives hints one step at a time
 3. `Quiz me on <topic>` or `Mock exam for <course>`
 4. `What should I study now?` — picks one block and starts it
-5. `Update my study setup` — add a course, change an exam date
+5. `Plan my study week` — suggests blocks in your free time (you add them to your calendar yourself)
+
+To change anything later: `Update my study setup`.
 
 ## How mastery works
 

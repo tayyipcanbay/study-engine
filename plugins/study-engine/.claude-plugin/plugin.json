@@ -1,6 +1,6 @@
 {
   "name": "study-engine",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A personal study system: lecture notes, hint-first tutoring, mock exams and spaced repetition, tracked in Notion. Run study-setup first.",
   "author": {
     "name": "Canbay"

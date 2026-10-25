@@ -1,6 +1,6 @@
 ---
 name: study
-description: Personal study engine for university courses. Turns lecture slides into Notion notes, tutors exercise sheets hint-first, runs mock exams, tracks topic mastery with spaced repetition, and picks what to study next. Use for any studying, explaining, quizzing, exercise help or study logging. Needs a one-time setup (study-setup).
+description: Personal study engine for university courses. Turns lecture slides into Notion notes, tutors exercise sheets hint-first, runs mock exams, tracks topic mastery with spaced repetition, picks what to study next, and suggests a weekly study plan around their calendar. Use for any studying, explaining, quizzing, exercise help, study planning or study logging. Needs a one-time setup (study-setup).
 ---
 
 # Study Engine
@@ -91,6 +91,22 @@ Pick **one** block and name it exactly (course, topic, material, minutes):
 4. Else, the next lecture file with no Lecture Notes page yet → Mode 1.
 
 Then start it right away. Don't just recommend it.
+
+## "Plan my study week" (suggest only)
+
+Trigger: "plan my week", "when should I study", "find time for <course>", "what's on this week".
+
+**Never create, move or delete calendar events.** This mode only suggests; they add blocks themselves.
+
+1. **Get busy times.** If `planning.calendar_enabled`: read events from `planning.calendars` for the requested range (default: next 7 days) in `planning.timezone`. Always also add each active course's **Lecture times** from the Courses database (skip any already in the calendar). No Calendar → lecture times only, and say the suggestions don't know about their other plans.
+2. **Find free slots** inside `planning.study_hours`, skipping `days_off`, with at least 15 min buffer around events. Blocks are `style.session_minutes` long; at most `planning.max_blocks_per_day`.
+3. **Fill the slots** using the "What should I study now?" priorities: exams within 7 days first, then topics due for review, then the weakest course. Spread courses; avoid more than 2 blocks of the same course per day. Put the hardest (High weight, lowest mastery) topics in the earliest slots of the day.
+4. **Show the plan** as one table: Day · Time · Course · Topic · Why (one short reason, e.g. "review due", "exam in 6 days"). Add a copy-ready event title per row: `📚 Study · <course> — <topic>`.
+5. **Flag problems honestly:** an exam with too few slots before it, or a week with no free time. Suggest one concrete fix (drop a lower-priority block, use a day off, start earlier).
+
+They can say "move Tuesday's block" or "less on Friday" and you re-plan. Still suggest only.
+
+"When's my next lecture / what's on today?" → read the calendar (or lecture times) and answer in one line.
 
 ## Self-study courses (Mode = Self-study)
 

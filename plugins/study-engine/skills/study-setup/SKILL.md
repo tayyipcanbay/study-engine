@@ -11,7 +11,9 @@ Goal: in ~10 minutes, turn a new user's answers into a working Notion study work
 
 1. **Check connectors.**
    - **Notion is required.** If no Notion tools are available, stop and tell them: connect Notion in their Claude settings (Connectors), then run setup again.
-   - **Google Drive is optional.** With it, the study skill reads course slides straight from Drive. Without it, they upload PDFs into the chat when studying. Say which mode they're in.
+   - **Google Drive is optional.** With it, the study skill reads course slides straight from Drive. Without it, they upload PDFs into the chat when studying.
+   - **Google Calendar is optional and read-only.** With it, the study skill reads their schedule and suggests study blocks in free slots. It never creates, moves or deletes events. Without it, suggestions are based only on the lecture times they give in setup.
+   - Say in one line which of these they have.
 2. **Look for an existing config.** Search Notion for a page titled exactly `Study Engine Config`. If it exists, fetch it and ask: *update it* (change courses, dates, preferences) or *start fresh*. Never overwrite a config without a yes.
 
 ## 1. Interview
@@ -37,8 +39,17 @@ Ask in small rounds (max 4 questions per round). Use multiple-choice question ca
 4. Priority or risk: *high* / *medium* / *low*.
 5. Material: a Google Drive folder link (if Drive is connected), or "I'll upload files".
 6. Graded coursework rules: is there a graded assignment, and an AI policy? (This decides what the tutor may write for them.)
+7. Lecture / tutorial times, if any (e.g. "Mon 10:00–11:30, Thu 14:00–15:30"). Skip for self-study.
 
-Ask "another course?" until they say done. Then read the whole plan back in one short table and get a yes before building.
+Ask "another course?" until they say done.
+
+**Round D — planning (only if Calendar is connected)**
+1. Which calendars to read for busy times: *primary only* / *pick from a list* (list them).
+2. Hours they're willing to study, e.g. 09:00–20:00, and days off.
+3. Max study blocks per day: 1 / 2 / 3 / 4.
+4. Their timezone (confirm from the calendar settings if possible).
+
+Without Calendar, still ask 2 and 3; the planner uses them with the lecture times. Then read the whole plan back in one short table and get a yes before building.
 
 ## 2. Build the Notion workspace
 
@@ -47,7 +58,7 @@ Ask "another course?" until they say done. Then read the whole plan back in one 
 
 | Database | Properties |
 |---|---|
-| **Courses** | Name (title) · Status (select: Active, Planned, Passed, Failed, Dropped) · Mode (select: Lectures, Self-study, Project) · Exam type (select: Written, Oral, Project, Unknown) · Exam date (date) · Credits (number) · Priority (select: High, Medium, Low) · Drive folder (url) · AI policy (text) · Grade (text) |
+| **Courses** | Name (title) · Status (select: Active, Planned, Passed, Failed, Dropped) · Mode (select: Lectures, Self-study, Project) · Exam type (select: Written, Oral, Project, Unknown) · Exam date (date) · Credits (number) · Priority (select: High, Medium, Low) · Drive folder (url) · Lecture times (text) · AI policy (text) · Grade (text) |
 | **Topics** | Name (title) · Course (relation → Courses) · Week (number) · Exam weight (select: High, Medium, Low) · Mastery (number, 0–3) · Last reviewed (date) · Next review (date) · Weak points (text) · Source (text) |
 | **Lecture Notes** | Title (title) · Course (relation → Courses) · Lecture # (number) · Date (date) · Source file (url) · Status (select: Draft, Reviewed) · Topics (relation → Topics) |
 | **Study Log** | Title (title) · Date (date) · Course (relation → Courses) · Topics (relation → Topics) · Type (select: Lecture notes, Exercises, Mock exam, Review, Reading) · Minutes (number) · Score % (number) · Takeaways (text) |
@@ -92,6 +103,14 @@ Create a page titled exactly **`Study Engine Config`** under the Study Hub. Top 
     "study_log": "<data source id>"
   },
   "drive_enabled": true,
+  "planning": {
+    "calendar_enabled": true,
+    "calendars": ["primary"],
+    "timezone": "Europe/Berlin",
+    "study_hours": "09:00-20:00",
+    "days_off": ["Sunday"],
+    "max_blocks_per_day": 3
+  },
   "courses": [
     { "name": "Numerical Methods", "notion_page": "<page id>", "drive_folder": "<folder id or null>" }
   ],
@@ -101,7 +120,7 @@ Create a page titled exactly **`Study Engine Config`** under the Study Hub. Top 
 
 Grading bands per scale (percent threshold → label): German as above · letter: 90 A, 80 B, 70 C, 60 D, 0 F · UK: 70 First, 60 2:1, 50 2:2, 40 Third, 0 Fail · percent only: no bands. For "other", ask for their thresholds.
 
-Course details (exam type, dates, priority, AI policy) live in the **Courses database**, not in the JSON. The JSON only maps names to IDs so nothing gets out of sync.
+Course details (exam type, dates, lecture times, priority, AI policy) live in the **Courses database**, not in the JSON. The JSON only maps names to IDs so nothing gets out of sync.
 
 ## 4. Smoke test and hand-off
 
@@ -110,6 +129,7 @@ Course details (exam type, dates, priority, AI policy) live in the **Courses dat
    - "Make notes for <course> lecture 1"
    - "What should I study now?"
    - "Quiz me on <topic>"
+   - "Plan my study week"
 3. Remind them: *to change anything later, say "update my study setup".*
 
 ## Updating later
