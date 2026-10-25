@@ -14,7 +14,7 @@ Goal: in ~10 minutes, turn a new user's answers into a working Notion study work
    - **Google Drive is optional.** With it, the study skill reads course slides straight from Drive. Without it, they upload PDFs into the chat when studying.
    - **Google Calendar is optional and read-only.** With it, the study skill reads their schedule and suggests study blocks in free slots. It never creates, moves or deletes events. Without it, suggestions are based only on the lecture times they give in setup.
    - Say in one line which of these they have.
-2. **Look for an existing config.** Search Notion for a page titled exactly `Study Engine Config`. If it exists, fetch it and ask: *update it* (change courses, dates, preferences) or *start fresh*. Never overwrite a config without a yes.
+2. **Look for an existing config.** Search Notion for a page titled exactly `Study Engine Config`. If it exists, fetch it and ask: *update it* (change courses, dates, preferences) or *start fresh*. Never overwrite or delete a config, database or page without a yes. *Start fresh* means archiving the old config page (after a yes) so only one config exists.
 
 ## 1. Interview
 
@@ -38,18 +38,18 @@ Ask in small rounds (max 4 questions per round). Use multiple-choice question ca
 3. Exam: *written* / *oral* / *project or report* / *unknown*, plus date if known, plus credits if relevant.
 4. Priority or risk: *high* / *medium* / *low*.
 5. Material: a Google Drive folder link (if Drive is connected), or "I'll upload files".
-6. Graded coursework rules: is there a graded assignment, and an AI policy? (This decides what the tutor may write for them.)
+6. Graded coursework rules: is there a graded assignment, and an AI policy? (This decides what the tutor may write for them.) Store both in the **AI policy** field, e.g. `Graded: 3 lab reports. Policy: no AI-written code or text.`
 7. Lecture / tutorial times, if any (e.g. "Mon 10:00–11:30, Thu 14:00–15:30"). Skip for self-study.
 
 Ask "another course?" until they say done.
 
-**Round D — planning (only if Calendar is connected)**
-1. Which calendars to read for busy times: *primary only* / *pick from a list* (list them).
-2. Hours they're willing to study, e.g. 09:00–20:00, and days off.
-3. Max study blocks per day: 1 / 2 / 3 / 4.
-4. Their timezone (confirm from the calendar settings if possible).
+**Round D — planning**
+1. Hours they're willing to study (e.g. 09:00–20:00) and days off.
+2. Max study blocks per day: 1 / 2 / 3 / 4.
+3. *Calendar only:* which calendars to read for busy times: *primary only* / *pick from a list* (list them).
+4. Their timezone (from the calendar settings if connected, otherwise ask).
 
-Without Calendar, still ask 2 and 3; the planner uses them with the lecture times. Then read the whole plan back in one short table and get a yes before building.
+**Confirm before building.** Read the whole plan back in one short table (courses, exam types, style, planning) and get a yes.
 
 ## 2. Build the Notion workspace
 
@@ -104,7 +104,7 @@ Create a page titled exactly **`Study Engine Config`** under the Study Hub. Top 
   },
   "drive_enabled": true,
   "planning": {
-    "calendar_enabled": true,
+    "calendar_enabled": false,
     "calendars": ["primary"],
     "timezone": "Europe/Berlin",
     "study_hours": "09:00-20:00",
@@ -134,4 +134,12 @@ Course details (exam type, dates, lecture times, priority, AI policy) live in th
 
 ## Updating later
 
-"Update my study setup", "add a course", "my exam date changed": fetch the config page, change only what they asked, write the JSON back, and update the matching Courses row. Read the change back in one line.
+"Update my study setup", "add a course", "my exam date changed": fetch the config page and change only what they asked.
+
+- **Course detail changed** (exam date, lecture times, policy) → update the Courses row only.
+- **Course added** → ask the Round C questions for it, create its Courses row, then add `{name, notion_page, drive_folder}` to the JSON `courses` list.
+- **Course dropped** → set its Courses row Status = Dropped; keep its topics and logs.
+- **Preferences / planning / dates** → edit the JSON.
+- **Config from an older version** (e.g. no `planning` key) → ask the missing round's questions and add the key.
+
+Write the JSON back, then read the change back in one line.

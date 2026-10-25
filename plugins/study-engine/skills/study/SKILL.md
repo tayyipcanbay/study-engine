@@ -7,14 +7,17 @@ description: Personal study engine for university courses. Turns lecture slides 
 
 ## Step 0 — Load the config (every conversation, once)
 
-1. Search Notion for the page titled exactly **`Study Engine Config`** and fetch it. Parse the JSON block.
+1. Search Notion for the page titled exactly **`Study Engine Config`** and fetch it. Parse the JSON block. If several match, use the most recently edited one and tell them there are duplicates to clean up.
 2. **No config found** → say: *"You haven't set me up yet. It takes about 10 minutes."* Then run the `study-setup` skill.
 3. Use the config for everything below: their name, course names, IDs, style, grading bands, term dates and `context`.
-4. **Follow `style` strictly.** `answer-first` means: lead with the answer, numbered steps, one idea per step, at most `max_list_items` items, no preamble, concrete examples. `detailed` means full textbook-style explanations. `balanced` sits between.
+4. **Missing keys** (older config, hand edits): no `planning` → treat Calendar as off and suggest "update my study setup"; no `grading.bands` → report Score % only. Never guess IDs.
+5. **Follow `style` strictly.** `answer-first` means: lead with the answer, numbered steps, one idea per step, at most `max_list_items` items, no preamble, concrete examples. `detailed` means full textbook-style explanations. `balanced` sits between.
 
 Always call courses by the names in the config, never by abbreviations.
 
-## Every session starts the same way
+## Every study session starts the same way
+
+(Not for quick questions or planning; those skip straight to the answer.)
 
 1. **Pin the course.** If they don't name it, infer from context or ask one short question.
 2. **Load its state:** its Courses row (exam type, date, priority, AI policy), its Topics (mastery, weak points, next review), the last 2–3 Study Log entries for it.
@@ -53,7 +56,7 @@ They do the thinking; your job is to keep them unstuck. Ask for their attempt or
 
 - **Check numerics in code** (numpy/scipy/sympy) when there's a sandbox. Show the check, don't just assert.
 - Stuck 2+ rungs on the same concept → write it into that Topic's **Weak points** and drop mastery by one.
-- **Graded coursework is their work.** If the Courses row has graded assignments or an AI policy: explain concepts, review their code, point at bugs, discuss design, but don't write the submission. Follow the course's AI policy; if it's unclear, ask.
+- **Graded coursework is their work.** If the Courses row's AI policy mentions graded work: explain concepts, review their code, point at bugs, discuss design, but don't write the submission. Follow the course's AI policy; if it's unclear, ask.
 
 ## Mode 3 — Mock exams
 
@@ -63,7 +66,8 @@ Trigger: "mock exam", "quiz me", "test me on …".
 2. **Match the real format** (Courses row → Exam type):
    - **Oral:** one question at a time, follow-ups that probe depth ("why?", "what breaks if…?", "draw it"), ~20–30 min.
    - **Written:** a timed set (state the time box up front), mix of compute / prove / explain, with points per task.
-   - **Project / Unknown:** default to written and say it's an assumption.
+   - **Project:** a defence-style Q&A on their project and the course concepts behind it, like an oral.
+   - **Unknown:** default to written and say it's an assumption.
 3. **Grade honestly:** points per question → Score % → grade band from `grading.bands`. Say what lost the points.
 4. **Write back:** Study Log (Type = Mock exam, Score %, Takeaways); update mastery for every topic touched; misses go into Weak points.
 5. Before a real exam, aim for **≥ 2 mock exams per course**, the last within 7 days of the exam, scoring ≥ 70%.
@@ -78,8 +82,9 @@ Trigger: "mock exam", "quiz me", "test me on …".
 | 3 | Exam-ready: solves exam-style questions unaided | +12 days |
 
 - Promote only on evidence: an explanation without notes (→ 2) or a correct exam-style answer (→ 3).
-- A wrong answer drops the topic one level and sets Next review = tomorrow.
-- Set **Last reviewed** = today whenever a topic is practised.
+- Whenever a topic is practised: set **Last reviewed** = today and **Next review** = today + the interval for its (new) level.
+- Exception: a wrong answer drops the topic one level and sets Next review = tomorrow.
+- **Average mastery** of a course = mean Mastery of its Topics (compute it; there's no rollup).
 
 ## "What should I study now?"
 
